@@ -1,0 +1,16 @@
+{
+  "presets": [
+    [ "env", { "modules": false } ],
+    "stage-2",
+    "flow"
+  ],
+  "plugins": [
+    ["component", [
+      {
+        "libraryName": "mint-ui",
+        "style": true
+      }
+    ]],
+    "transform-runtime"
+  ]
+}
