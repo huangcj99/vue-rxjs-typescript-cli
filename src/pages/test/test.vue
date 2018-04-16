@@ -1,15 +1,17 @@
 <template>
   <div class="content">
-    <p>{{ name }}</p>
-    <p>{{ age }}</p>
+    <p>{{ test$ }}</p>
+    <p>{{ count$ }}</p>
     <button type="button" name="button" v-stream:click="click$">点击发出流</button>
+    <button type="button" name="button" v-stream:click="sendCount$">点击开始计数</button>
   </div>
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
-  import { Component, Prop } from "vue-property-decorator";
+  import Component from "vue-class-component";
   import * as Rx from 'rxjs/Rx'
+  import { catchError } from 'rxjs/operators';
 
   @Component
   export default class HelloDecorator extends Vue {
@@ -17,46 +19,32 @@
     name: string = 'huang';
     age: number = 0;
 
-    // domStream$
     click$ = new Rx.Subject();
-
-    created () {
-      this.test(this.name)
-    }
-
-    mounted () {
-      let subscriptionsObj: any = this.subscriptions()
-
-      for (let stream in subscriptionsObj) {
-        this.that.$subscribeTo(
-          subscriptionsObj[stream]
-        )
-      }
-    }
+    sendCount$ = new Rx.Subject();
 
     subscriptions () {
+      console.log('---');
       return {
-        test$: this.click$.take(1)
+        test$: this.that.click$
+          .take(1)
           .concatMap((e: object) => {
             console.log(e);
             return Rx.Observable.of('chen')
               .map((data: string) => {
-                this.name = data
+                return data
               })
           })
+          .startWith('huang'),
+        count$: this.that.sendCount$
+          .concatMap(() => {
+            return Rx.Observable.interval(1000)
+          })
+          .startWith(0)
       }
     }
 
     test(data: string): string {
       return data
-    }
-
-    getRx (): void {
-      Rx.Observable.interval(1000)
-        .map((data) => data)
-        .subscribe((data) => {
-          this.age = data
-        })
     }
   }
 </script>
@@ -72,6 +60,7 @@
       height: 30px;
       text-align: center;
       line-height: 30px;
+      background-color: #f5f5f5;
     }
   }
 </style>

@@ -1,5 +1,6 @@
 import 'assets/css/reset.css'
 import './test.scss'
+import '../../libs/class-component-hooks.js'
 import Vue from 'vue'
 import * as VueRx from 'vue-rx'
 import * as Rx from 'rxjs/Rx'
