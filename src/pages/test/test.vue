@@ -1,5 +1,7 @@
 <template>
   <div class="content">
+    <p>{{ name }}</p>
+    <p>{{ age }}</p>
     <p>{{ test$ }}</p>
     <p>{{ count$ }}</p>
     <button type="button" name="button" v-stream:click="click$">点击发出流</button>
@@ -11,21 +13,24 @@
   import Vue from 'vue'
   import Component from "vue-class-component";
   import * as Rx from 'rxjs/Rx'
-  import { catchError } from 'rxjs/operators';
 
   @Component
   export default class HelloDecorator extends Vue {
-    that: any = this;
+    // that: any = this;
     name: string = 'huang';
     age: number = 0;
 
     click$ = new Rx.Subject();
     sendCount$ = new Rx.Subject();
 
+    created () {
+      let a = this.test()
+    }
+
     subscriptions () {
       console.log('---');
       return {
-        test$: this.that.click$
+        test$: this.click$
           .take(1)
           .concatMap((e: object) => {
             console.log(e);
@@ -35,7 +40,7 @@
               })
           })
           .startWith('huang'),
-        count$: this.that.sendCount$
+        count$: this.sendCount$
           .concatMap(() => {
             return Rx.Observable.interval(1000)
           })
@@ -43,8 +48,10 @@
       }
     }
 
-    test(data: string): string {
-      return data
+    test(): object {
+      return {
+        name: this.name
+      }
     }
   }
 </script>
