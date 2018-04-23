@@ -6,17 +6,22 @@
     <p>{{ count$ }}</p>
     <button type="button" name="button" v-stream:click="click$">点击发出流</button>
     <button type="button" name="button" v-stream:click="sendCount$">点击开始计数</button>
+    <A></A>
   </div>
 </template>
 
 <script lang="ts">
+  import A from './components/a.vue'
   import Vue from 'vue'
   import Component from "vue-class-component";
   import * as Rx from 'rxjs/Rx'
-
-  @Component
+  
+  @Component({
+    components: {
+      A,
+    }
+  })
   export default class HelloDecorator extends Vue {
-    // that: any = this;
     name: string = 'huang';
     age: number = 0;
 
@@ -24,7 +29,7 @@
     sendCount$ = new Rx.Subject();
 
     created () {
-      let a = this.test()
+      
     }
 
     subscriptions () {
@@ -45,12 +50,6 @@
             return Rx.Observable.interval(1000)
           })
           .startWith(0)
-      }
-    }
-
-    test(): object {
-      return {
-        name: this.name
       }
     }
   }

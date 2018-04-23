@@ -36,12 +36,6 @@ module.exports = {
   module: {
     rules: [
       {
-        enforce: 'pre',
-        test: /\.(vue|js)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
@@ -63,22 +57,19 @@ module.exports = {
           postcss: postConfig
         }
       },
-      // {
-      //   test: /\.js$/,
-      //   use: [
-      //     'babel-loader'
-      //   ],
-      //   include: [
-      //     path.join(__dirname, '../src')
-      //   ]
-      // },
       {
         test: /\.ts$/,
-        loader: 'ts-loader',
-        exclude: /node_modules/,
-        options: {
-          appendTsSuffixTo: [/\.vue$/],
-        }
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              appendTsSuffixTo: [/\.vue$/],
+            }
+          }
+        ],
+        include: [
+          path.join(__dirname, '../src')
+        ]
       },
       {
         test: /\.css$/,
